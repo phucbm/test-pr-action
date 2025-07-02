@@ -156,7 +156,8 @@ runs:
           const isDependabot = context.actor === 'dependabot[bot]';
           const autoMergeEnabled = '${{ inputs.dependabot-auto-merge }}' === 'true';
           
-          let body = '✅ **Tests passed!** All tests completed successfully.\n\n_Triggered by: ${{ github.event_name == "issue_comment" && "comment" || "pull request event" }}_';
+          const triggerType = '${{ github.event_name }}' === 'issue_comment' ? 'comment' : 'pull request event';
+          let body = `✅ **Tests passed!** All tests completed successfully.\n\n_Triggered by: ${triggerType}_`;
           
           // Add instructions
           body += '\n\n---\n<details>\n<summary>Test PR Action commands and options</summary>\n<br />\n\n';
@@ -190,7 +191,8 @@ runs:
         script: |
           const prNumber = context.payload.pull_request?.number || context.payload.issue?.number;
           
-          let body = '❌ **Tests failed!** Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.\n\n_Triggered by: ${{ github.event_name == "issue_comment" && "comment" || "pull request event" }}_';
+          const triggerType = '${{ github.event_name }}' === 'issue_comment' ? 'comment' : 'pull request event';
+          let body = `❌ **Tests failed!** Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.\n\n_Triggered by: ${triggerType}_`;
           
           // Add instructions
           body += '\n\n---\n<details>\n<summary>Test PR Action commands and options</summary>\n<br />\n\n';
@@ -218,7 +220,8 @@ runs:
           const isDependabot = context.actor === 'dependabot[bot]';
           const autoMergeEnabled = '${{ inputs.dependabot-auto-merge }}' === 'true';
           
-          let body = 'ℹ️ **No test script found** in package.json. Skipping tests.\n\n_Triggered by: ${{ github.event_name == "issue_comment" && "comment" || "pull request event" }}_';
+          const triggerType = '${{ github.event_name }}' === 'issue_comment' ? 'comment' : 'pull request event';
+          let body = `ℹ️ **No test script found** in package.json. Skipping tests.\n\n_Triggered by: ${triggerType}_`;
           
           // Add instructions
           body += '\n\n---\n<details>\n<summary>Test PR Action commands and options</summary>\n<br />\n\n';

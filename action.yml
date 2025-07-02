@@ -155,9 +155,12 @@ runs:
           const prNumber = context.payload.pull_request?.number || context.payload.issue?.number;
           const isDependabot = context.actor === 'dependabot[bot]';
           const autoMergeEnabled = '${{ inputs.dependabot-auto-merge }}' === 'true';
-          
+          const packageManager = '${{ steps.detect-pm.outputs.pm }}';
           const triggerType = '${{ github.event_name }}' === 'issue_comment' ? 'comment' : 'pull request event';
-          let body = `✅ **Tests passed!** All tests completed successfully.\n\n_Triggered by: ${triggerType}_`;
+          
+          let body = `✅ **Tests passed!** All tests completed successfully.\n\n`;
+          body += `📦 **Package manager:** ${packageManager}\n`;
+          body += `_Triggered by: ${triggerType}_`;
           
           // Add instructions
           body += '\n\n---\n<details>\n<summary>Test PR Action commands and options</summary>\n<br />\n\n';
@@ -176,6 +179,9 @@ runs:
           
           body += '\n</details>';
           
+          // Add branding footer
+          body += '\n\n---\n🤖 *Automated by [Test PR Action](https://github.com/phucbm/test-pr-action) by @phucbm*';
+          
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
@@ -190,9 +196,12 @@ runs:
         github-token: ${{ inputs.github-token }}
         script: |
           const prNumber = context.payload.pull_request?.number || context.payload.issue?.number;
-          
+          const packageManager = '${{ steps.detect-pm.outputs.pm }}';
           const triggerType = '${{ github.event_name }}' === 'issue_comment' ? 'comment' : 'pull request event';
-          let body = `❌ **Tests failed!** Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.\n\n_Triggered by: ${triggerType}_`;
+          
+          let body = `❌ **Tests failed!** Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.\n\n`;
+          body += `📦 **Package manager:** ${packageManager}\n`;
+          body += `_Triggered by: ${triggerType}_`;
           
           // Add instructions
           body += '\n\n---\n<details>\n<summary>Test PR Action commands and options</summary>\n<br />\n\n';
@@ -202,6 +211,9 @@ runs:
           body += '- `/test-merge` will run tests and auto-merge if tests pass (Dependabot PRs only)\n';
           body += '\n💡 **Tip**: Fix the failing tests and use `/retest` to verify the fixes.\n';
           body += '\n</details>';
+          
+          // Add branding footer
+          body += '\n\n---\n🤖 *Automated by [Test PR Action](https://github.com/phucbm/test-pr-action) by @phucbm*';
           
           await github.rest.issues.createComment({
             owner: context.repo.owner,
@@ -219,9 +231,12 @@ runs:
           const prNumber = context.payload.pull_request?.number || context.payload.issue?.number;
           const isDependabot = context.actor === 'dependabot[bot]';
           const autoMergeEnabled = '${{ inputs.dependabot-auto-merge }}' === 'true';
-          
+          const packageManager = '${{ steps.detect-pm.outputs.pm }}';
           const triggerType = '${{ github.event_name }}' === 'issue_comment' ? 'comment' : 'pull request event';
-          let body = `ℹ️ **No test script found** in package.json. Skipping tests.\n\n_Triggered by: ${triggerType}_`;
+          
+          let body = `ℹ️ **No test script found** in package.json. Skipping tests.\n\n`;
+          body += `📦 **Package manager:** ${packageManager}\n`;
+          body += `_Triggered by: ${triggerType}_`;
           
           // Add instructions
           body += '\n\n---\n<details>\n<summary>Test PR Action commands and options</summary>\n<br />\n\n';
@@ -240,6 +255,9 @@ runs:
           
           body += '\n💡 **Tip**: Add a `test` script to your package.json to enable automatic testing.\n';
           body += '\n</details>';
+          
+          // Add branding footer
+          body += '\n\n---\n🤖 *Automated by [Test PR Action](https://github.com/phucbm/test-pr-action) by @phucbm*';
           
           await github.rest.issues.createComment({
             owner: context.repo.owner,
